@@ -1,71 +1,117 @@
 #include "RobotControler.h"
-
 #include "ApplicationController.h"
+#define CHESS_ROW 8
+#define CHESS_COL 8
 RobotControler::RobotControler(ApplicationController* app)
 {
     m_app = app;
-    m_robotState = ROBOT_STATE::ROBOT_WAIT_COMMAND;
-    for(int i=0; i< MOTOR::MOTOR_MAX; i++) {
-        m_targetStep[i] = 0;
-        m_currentStep[i] = 0;
-        m_dirStep[i] = 0;
-    }
+    m_robotState = ROBOT_STATE::ROBOT_INIT_STATE;
 }
 void RobotControler::loop() {
     switch (m_robotState) {
-    case ROBOT_STATE::ROBOT_WAIT_COMMAND: {
+    case ROBOT_STATE::ROBOT_RETURN_HOME: {
+        returnHome();
         break;
     }
-    case ROBOT_STATE::ROBOT_MOVE_HOST_GO_TO_CURRENT_POS: {
+    case ROBOT_STATE::ROBOT_MOVE_PIECE: {
         moveToTargetPostion();
         break;
     }
     }
 }
 void RobotControler::setRobotState(ROBOT_STATE robotState) {
+    if(m_robotState == robotState) return;
     m_robotState = robotState;
+    switch (m_robotState) {
+    case ROBOT_RETURN_HOME: {
+        m_app->printf("[RB]  ROBOT_RETURN_HOME\r\n");
+        break;
+    }
+    case ROBOT_MOVE_PIECE: {
+        m_app->printf("[RB]  ROBOT_MOVE_PIECE\r\n");
+        break;
+    }
+    }
 }
 void RobotControler::returnHome(){
-//    setTargetPosition(0.0f,0.0f,0.0f);
+    bool allMotorsAreHome = true;
+    for(unsigned int axis=0; axis< (unsigned int)MOTOR::MOTOR_MAX; axis++) {
+        if(!m_motorList->isHome()) {
+            m_app->controlMotor((MOTOR)axis,MOTOR_DIR_INVERSE);
+            allMotorsAreHome = false;
+        }
+    }
+    if(allMotorsAreHome) m_app->setMachineState(MACHINE_CHECK_PIECE);
+}
+Motor* RobotControler::getMotor(MOTOR axis) {
+    return &m_motorList[axis];
 }
 void RobotControler::moveHost(int currentRow, int currentCol, int targetRow, int targetCol) {
-    m_targetStep[MOTOR::MOTOR_X] = 100;
-    m_targetStep[MOTOR::MOTOR_Y] = 100;
-    m_targetStep[MOTOR::MOTOR_Z] = 100;
-    setRobotState(ROBOT_STATE::ROBOT_MOVE_HOST_GO_TO_CURRENT_POS_EXECUTE);
+    m_app->printf("Move Host\r\n");
+    m_moveSequence[0] = {MOVE_CODE_HAS_MOVE,false,{10,10,10,10}};
+//    m_moveSequence[1] = {MOVE_CODE_HAS_MOVE,false,{100,100,100,0}};
+//    m_moveSequence[2] = {MOVE_CODE_HAS_MOVE,false,{100,150,100,0}};
+//    m_moveSequence[3] = {MOVE_CODE_HAS_MOVE,false,{150,150,100,100}};
+//    m_moveSequence[4] = {MOVE_CODE_HAS_MOVE,false,{0,0,0,100}};
+//    m_numberMove = 5;
+    m_moveSequence[1] = {MOVE_CODE_HAS_MOVE,false,{0,0,0,0}};
+    m_moveSequence[2] = {MOVE_CODE_HAS_MOVE,false,{15,15,15,15}};
+    m_numberMove = 3;
+    m_currentMoveID = 0;
 }
 
 void RobotControler::captureGuest(int currentRow, int currentCol, int targetRow, int targetCol)
 {
-    m_targetStep[MOTOR::MOTOR_X] = 100;
-    m_targetStep[MOTOR::MOTOR_Y] = 100;
-    m_targetStep[MOTOR::MOTOR_Z] = 100;
-    setRobotState(ROBOT_STATE::ROBOT_CAPTURE_GUEST_GO_TO_CURRENT_POS_EXECUTE);
+    m_app->printf("Capture Guest\r\n");
+    m_moveSequence[0] = {MOVE_CODE_HAS_MOVE,false,{100,100,60,100}};
+    m_moveSequence[1] = {MOVE_CODE_HAS_MOVE,false,{100,100,60,0}};
+    m_moveSequence[2] = {MOVE_CODE_HAS_MOVE,false,{100,150,180,0}};
+    m_moveSequence[3] = {MOVE_CODE_HAS_MOVE,false,{150,150,180,100}};
+    m_moveSequence[5] = {MOVE_CODE_HAS_MOVE,false,{100,100,100,100}};
+    m_moveSequence[6] = {MOVE_CODE_HAS_MOVE,false,{100,100,100,0}};
+    m_moveSequence[7] = {MOVE_CODE_HAS_MOVE,false,{100,150,100,0}};
+    m_moveSequence[8] = {MOVE_CODE_HAS_MOVE,false,{150,150,100,100}};
+    m_moveSequence[9] = {MOVE_CODE_HAS_MOVE,false,{0,0,0,100}};
+    m_numberMove = 10;
+    m_currentMoveID = 0;
 }
 void RobotControler::moveToTargetPostion() {
-    bool moveToTargetDone = true;
-    for(unsigned int axis=0; axis< (unsigned int)MOTOR::MOTOR_MAX - 1; axis++) {
+    if(!m_moveSequence[m_currentMoveID].moveInit) {
+        for(unsigned int axis=0; axis< (unsigned int)MOTOR::MOTOR_MAX; axis++) {
+            m_motorList[axis].setTargetStep(m_moveSequence[m_currentMoveID].step[axis]);
+            m_motorList[axis].setDirStep(m_moveSequence[m_currentMoveID].step[axis] > m_motorList[axis].currentStep() ?
+                                                MOTOR_DIR_NORMAL:MOTOR_DIR_INVERSE);
+        }
+        m_moveSequence[m_currentMoveID].moveInit = true;
+    }
+    bool allMotorsAreHome = true;
+    for(unsigned int axis=0; axis< (unsigned int)MOTOR::MOTOR_MAX; axis++) {
         if(!moveDone((MOTOR)axis)){
-            moveToTargetDone = false;
-            m_currentStep[axis] += m_dirStep[axis];
+            allMotorsAreHome = false;
+            m_app->controlMotor((MOTOR)axis,m_motorList[axis].dirStep());
         }
     }
-    if(moveToTargetDone) {
-
-    }
+    m_app->printf("MOVE[%d] X[%d] Y[%d] Z[%d] CAP[%d]\r\n",
+                  m_currentMoveID,
+                  m_motorList[MOTOR_X].currentStep(),
+                  m_motorList[MOTOR_Y].currentStep(),
+                  m_motorList[MOTOR_Z].currentStep(),
+                  m_motorList[MOTOR_CAP].currentStep());
+    if(allMotorsAreHome) m_currentMoveID++;
+    if(m_currentMoveID >= m_numberMove) m_app->setMachineState(MACHINE_STATE::MACHINE_WAIT_OPPONENT_MOVE);
 }
 bool RobotControler::moveDone(MOTOR axis) {
-    return m_dirStep[axis] >= 0 ? m_currentStep[axis] >= m_targetStep[axis]:
-                                  m_currentStep[axis] < m_targetStep[axis];
+    return m_motorList[axis].dirStep() >= 0 ? m_motorList[axis].currentStep() >= m_motorList[axis].targetStep():
+                                  m_motorList[axis].currentStep() < m_motorList[axis].targetStep();
 }
 void RobotControler::capture() {
-    m_dirStep[MOTOR::MOTOR_CAP] = -1;
+    m_motorList[MOTOR::MOTOR_CAP].setDirStep(MOTOR_DIR_INVERSE);
 }
 bool RobotControler::captureDone() {
 
 }
 void RobotControler::release() {
-    m_dirStep[MOTOR::MOTOR_CAP] = 1;
+    m_motorList[MOTOR::MOTOR_CAP].setDirStep(MOTOR_DIR_NORMAL);
 }
 bool RobotControler::releaseDone() {
 

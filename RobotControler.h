@@ -2,6 +2,13 @@
 #define ROBOTCONTROLER_H
 
 #include <stdio.h>
+#include "Motor.h"
+
+#define MOTOR_DIR_NORMAL 1
+#define MOTOR_DIR_INVERSE -1
+#define MOTOR_MAX_SEQUENCE 20
+#define MOVE_CODE_NO_MOVE 0
+#define MOVE_CODE_HAS_MOVE 1
 typedef enum {
     MOTOR_X,
     MOTOR_Y,
@@ -11,24 +18,17 @@ typedef enum {
 } MOTOR;
 
 typedef enum {
-    ROBOT_WAIT_COMMAND,
-    ROBOT_MOVE_HOST_GO_TO_CURRENT_POS,
-    ROBOT_MOVE_HOST_GO_TO_CURRENT_POS_EXECUTE,
-    ROBOT_MOVE_HOST_CAPTURE,
-    ROBOT_MOVE_HOST_CAPTURE_EXECUTE,
-    ROBOT_MOVE_HOST_GO_TO_TARGET_POS,
-    ROBOT_MOVE_HOST_GO_TO_TARGET_POS_EXECUTE,
-    ROBOT_MOVE_HOST_RELEASE,
-    ROBOT_MOVE_HOST_RELEASE_EXECUTE,
-    ROBOT_CAPTURE_GUEST_GO_TO_CURRENT_POS,
-    ROBOT_CAPTURE_GUEST_GO_TO_CURRENT_POS_EXECUTE,
-    ROBOT_CAPTURE_GUEST_CAPTURE,
-    ROBOT_CAPTURE_GUEST_CAPTURE_EXECUTE,
-    ROBOT_CAPTURE_GUEST_GO_TO_BOX_POS,
-    ROBOT_CAPTURE_GUEST_GO_TO_BOX_POS_EXECUTE,
-    ROBOT_CAPTURE_GUEST_RELEASE,
-    ROBOT_CAPTURE_GUEST_RELEASE_EXECUTE,
+    ROBOT_INIT_STATE,
+    ROBOT_RETURN_HOME,
+    ROBOT_MOVE_PIECE
 } ROBOT_STATE;
+
+#pragma pack(1)
+typedef struct {
+    unsigned char moveCode;
+    bool moveInit;
+    int step[MOTOR_MAX];
+} MoveLocation;
 
 class ApplicationController;
 class RobotControler
@@ -37,6 +37,7 @@ public:
     RobotControler(ApplicationController* app);
     void loop();
     void setRobotState(ROBOT_STATE robotState);
+    Motor* getMotor(MOTOR axis);
     void returnHome();
     void moveHost(int currentRow, int currentCol, int targetRow, int targetCol);
     void captureGuest(int currentRow, int currentCol, int targetRow, int targetCol);
@@ -49,9 +50,10 @@ public:
 private:
     ApplicationController* m_app;
     ROBOT_STATE m_robotState;
-    unsigned int m_targetStep[MOTOR::MOTOR_MAX];
-    unsigned int m_currentStep[MOTOR::MOTOR_MAX];
-    int m_dirStep[MOTOR::MOTOR_MAX];
+    Motor m_motorList[MOTOR::MOTOR_MAX];
+    MoveLocation m_moveSequence[MOTOR_MAX_SEQUENCE];
+    int m_numberMove;
+    int m_currentMoveID;
 };
 
 #endif // ROBOTCONTROLER_H

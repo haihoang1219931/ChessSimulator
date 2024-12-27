@@ -57,7 +57,7 @@ ApplicationWindow {
     visible: true
     width: 1280
     height: 720
-    title: qsTr("Ches Simulator")
+    title: qsTr("Chess Simulator")
     Rectangle {
         id: rectangle
         x: 0
@@ -66,6 +66,12 @@ ApplicationWindow {
         height: 720
         color: "#84af40"
         z: 0
+        ChessBoard {
+           anchors.centerIn: parent
+           width: 640
+           height: 640
+        }
+
         Item {
             id: canvas
             anchors.fill: parent

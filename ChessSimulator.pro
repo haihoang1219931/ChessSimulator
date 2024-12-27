@@ -12,7 +12,9 @@ SOURCES += main.cpp  \
     VideoDisplay/VideoRender.cpp \
     ApplicationSim.cpp \
     MainProcess.cpp \
-    RobotControler.cpp
+    RobotControler.cpp \
+    Motor.cpp \
+    ChessController.cpp
 
 HEADERS += \
     ApplicationController.h \
@@ -20,4 +22,8 @@ HEADERS += \
     VideoDisplay/VideoRender.h \
     ApplicationSim.h \
     MainProcess.h \
-    RobotControler.h
+    RobotControler.h \
+    Motor.h \
+    ChessController.h
+
+DISTFILES +=

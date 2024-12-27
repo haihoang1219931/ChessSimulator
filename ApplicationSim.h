@@ -14,6 +14,8 @@ public:
     int printf(const char *fmt, ...) override;
     void msleep(int millis) override;
     long getSystemTimeInMillis() override;
+    void checkInput() override;
+    void controlMotor(MOTOR motorID, int dir) override;
 private:
     MainProcess* m_mainProcess;
 };

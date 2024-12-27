@@ -12,6 +12,10 @@ ApplicationSim::ApplicationSim(MainProcess* mainProcess)
 {
     m_mainProcess = mainProcess;
     m_machineState = MACHINE_STATE::MACHINE_INITIALIZE_ROBOT;
+    m_robot->getMotor(MOTOR::MOTOR_X)->setCurrentStep(100);
+    m_robot->getMotor(MOTOR::MOTOR_Y)->setCurrentStep(100);
+    m_robot->getMotor(MOTOR::MOTOR_Z)->setCurrentStep(100);
+
     ::printf("ApplicationSim constructor\r\n");
 }
 int ApplicationSim::printf(const char *fmt, ...) {
@@ -21,6 +25,7 @@ int ApplicationSim::printf(const char *fmt, ...) {
     int rc = vsprintf(buffer, fmt, args);
     va_end(args);
     ::printf("%s",buffer);
+    fflush(stdout);
     return rc;
 }
 void ApplicationSim::msleep(int millis) {
@@ -46,4 +51,24 @@ long ApplicationSim::getSystemTimeInMillis() {
 #else
     return 0;
 #endif
+}
+void ApplicationSim::checkInput() {
+#ifdef DEBUG
+    this->printf("I");
+#endif
+}
+void ApplicationSim::controlMotor(MOTOR motorID, int dir) {
+#ifdef DEBUG
+    this->printf("MOTOR[%d] TG[%d] CR[%d] H[%s]\r\n",
+            motorID,
+            m_robot->getMotor(motorID)->targetStep(),
+            m_robot->getMotor(motorID)->currentStep(),
+            m_robot->getMotor(motorID)->isHome()?"TRUE":"FALSE");
+#endif
+    m_robot->getMotor(motorID)->setDirStep(dir);
+    m_robot->getMotor(motorID)->move();
+    if(m_robot->getMotor(motorID)->currentStep() ==
+            m_robot->getMotor(motorID)->targetStep()){
+        m_robot->getMotor(motorID)->setHome(true);
+    }
 }

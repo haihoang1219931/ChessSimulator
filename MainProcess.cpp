@@ -2,8 +2,8 @@
 
 MainProcess::MainProcess(QThread *parent) :
     QThread(parent),
-    m_thread(nullptr),
-    m_stopped(false)
+    m_stopped(false),
+    m_thread(nullptr)
 
 {
     m_application = new ApplicationSim(this);
@@ -16,6 +16,7 @@ MainProcess::~MainProcess()
     sleep(2);
 }
 void MainProcess::run() {
+    m_application->printf("Start\r\n");
     while(!m_stopped) {
         m_application->loop();
         Q_EMIT readyToUpdate();

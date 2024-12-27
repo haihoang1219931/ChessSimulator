@@ -2,6 +2,7 @@
 #define APPLICATIONCONTROLLER_H
 
 #include "RobotControler.h"
+#include "ChessController.h"
 
 typedef enum{
     MACHINE_INITIALIZE_ROBOT,
@@ -10,6 +11,7 @@ typedef enum{
     MACHINE_CALCULATE_NEXT_MOVE,
     MACHINE_ATTACK_OPPONENT_PIECE,
     MACHINE_MOVE_PIECE,
+    MACHINE_MOVE_PIECE_EXECUTE,
     MACHINE_RETURN_HOME,
 } MACHINE_STATE;
 class ApplicationController
@@ -27,11 +29,13 @@ public:
     virtual int printf(const char *fmt, ...) = 0;
     virtual void msleep(int millis) = 0;
     virtual long getSystemTimeInMillis() = 0;
-    virtual void moveTo(float x, float y, float z);
+    virtual void checkInput() = 0;
+    virtual void controlMotor(MOTOR motorID, int dir) = 0;
 
 protected:
     MACHINE_STATE m_machineState;
     RobotControler* m_robot;
+    ChessController* m_chess;
     int m_frameWidth;
     int m_frameHeight;
     unsigned char m_frameData[9600]; // 320x240 bit
