@@ -9,11 +9,10 @@ public:
     int targetStep();
     int currentStep();
     int dirStep();
-    bool isHome();
+    bool isMoveDone();
     void setTargetStep(int targetStep);
     void setCurrentStep(int currentStep);
     void setDirStep(int dirStep);
-    void setHome(bool isHome);
     void move();
 private:
     int m_targetStep;

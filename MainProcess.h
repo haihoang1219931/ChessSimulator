@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QThread>
+#include <QMutex>
+#include <QWaitCondition>
 #include "ApplicationSim.h"
 
 class MainProcess : public QThread
@@ -14,6 +16,7 @@ public:
 
 Q_SIGNALS:
     void readyToUpdate();
+    void robotChanged(float angle1, float angle2, float angle3, float angle4);
 
 public Q_SLOTS:
     void run() override;
@@ -21,10 +24,14 @@ public Q_SLOTS:
     void stopService();
     void setRender(VideoRender* render);
     void updateScreen();
+    void pause(bool pause);
 private:
     unsigned char m_renderData[93110400]; // 1920x1080 I420
     bool m_stopped;
+    QMutex *m_mutex;
+    QWaitCondition* m_pauseCond;
     QThread* m_thread;
+    bool m_pause = false;
     ApplicationSim* m_application;
     VideoRender* m_render = nullptr;
 

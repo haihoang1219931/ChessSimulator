@@ -51,7 +51,9 @@ void ApplicationController::loop() {
 MACHINE_STATE ApplicationController::stateMachine() {
     return m_machineState;
 }
-
+int ApplicationController::motorPosition(MOTOR motorID) {
+    return m_robot->motorPosition(motorID);
+}
 void ApplicationController::setMachineState(MACHINE_STATE machineState) {
     if(m_machineState == machineState) return;
     m_machineState = machineState;

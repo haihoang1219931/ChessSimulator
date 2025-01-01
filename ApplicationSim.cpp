@@ -12,9 +12,14 @@ ApplicationSim::ApplicationSim(MainProcess* mainProcess)
 {
     m_mainProcess = mainProcess;
     m_machineState = MACHINE_STATE::MACHINE_INITIALIZE_ROBOT;
-    m_robot->getMotor(MOTOR::MOTOR_X)->setCurrentStep(100);
-    m_robot->getMotor(MOTOR::MOTOR_Y)->setCurrentStep(100);
-    m_robot->getMotor(MOTOR::MOTOR_Z)->setCurrentStep(100);
+    m_robot->getMotor(MOTOR::MOTOR_X)->setCurrentStep(0);
+    m_robot->getMotor(MOTOR::MOTOR_Y)->setCurrentStep(180);
+    m_robot->getMotor(MOTOR::MOTOR_Z)->setCurrentStep(0);
+    m_robot->getMotor(MOTOR::MOTOR_CAP)->setCurrentStep(100);
+    m_robot->getMotor(MOTOR::MOTOR_X)->setTargetStep(0);
+    m_robot->getMotor(MOTOR::MOTOR_Y)->setTargetStep(180);
+    m_robot->getMotor(MOTOR::MOTOR_Z)->setTargetStep(0);
+    m_robot->getMotor(MOTOR::MOTOR_CAP)->setTargetStep(100);
 
     ::printf("ApplicationSim constructor\r\n");
 }
@@ -58,17 +63,20 @@ void ApplicationSim::checkInput() {
 #endif
 }
 void ApplicationSim::controlMotor(MOTOR motorID, int dir) {
+    if(m_robot->getMotor(motorID)->currentStep() ==
+            m_robot->getMotor(motorID)->targetStep()){
+    } else {
 #ifdef DEBUG
-    this->printf("MOTOR[%d] TG[%d] CR[%d] H[%s]\r\n",
+        this->printf("MOTOR[%d] TG[%03d] CR[%03d] H[%s]\r\n",
             motorID,
             m_robot->getMotor(motorID)->targetStep(),
             m_robot->getMotor(motorID)->currentStep(),
             m_robot->getMotor(motorID)->isHome()?"TRUE":"FALSE");
 #endif
-    m_robot->getMotor(motorID)->setDirStep(dir);
-    m_robot->getMotor(motorID)->move();
-    if(m_robot->getMotor(motorID)->currentStep() ==
-            m_robot->getMotor(motorID)->targetStep()){
-        m_robot->getMotor(motorID)->setHome(true);
+        m_robot->getMotor(motorID)->setDirStep(dir);
+        m_robot->getMotor(motorID)->move();
     }
+}
+bool ApplicationSim::isAxisHome(MOTOR motorID) {
+    return m_robot->getMotor(motorID)->isMoveDone();
 }

@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>qml/main.qml</file>
         <file>qml/ChessBoard.qml</file>
+        <file>qml/Robot.qml</file>
+        <file>qml/RobotArm.qml</file>
+        <file>qml/Grabber.qml</file>
     </qresource>
 </RCC>

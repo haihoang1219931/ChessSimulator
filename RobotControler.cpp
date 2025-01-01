@@ -36,7 +36,7 @@ void RobotControler::setRobotState(ROBOT_STATE robotState) {
 void RobotControler::returnHome(){
     bool allMotorsAreHome = true;
     for(unsigned int axis=0; axis< (unsigned int)MOTOR::MOTOR_MAX; axis++) {
-        if(!m_motorList->isHome()) {
+        if(!m_app->isAxisHome((MOTOR)axis)) {
             m_app->controlMotor((MOTOR)axis,MOTOR_DIR_INVERSE);
             allMotorsAreHome = false;
         }
@@ -48,15 +48,15 @@ Motor* RobotControler::getMotor(MOTOR axis) {
 }
 void RobotControler::moveHost(int currentRow, int currentCol, int targetRow, int targetCol) {
     m_app->printf("Move Host\r\n");
-    m_moveSequence[0] = {MOVE_CODE_HAS_MOVE,false,{10,10,10,10}};
-//    m_moveSequence[1] = {MOVE_CODE_HAS_MOVE,false,{100,100,100,0}};
-//    m_moveSequence[2] = {MOVE_CODE_HAS_MOVE,false,{100,150,100,0}};
-//    m_moveSequence[3] = {MOVE_CODE_HAS_MOVE,false,{150,150,100,100}};
-//    m_moveSequence[4] = {MOVE_CODE_HAS_MOVE,false,{0,0,0,100}};
-//    m_numberMove = 5;
-    m_moveSequence[1] = {MOVE_CODE_HAS_MOVE,false,{0,0,0,0}};
-    m_moveSequence[2] = {MOVE_CODE_HAS_MOVE,false,{15,15,15,15}};
-    m_numberMove = 3;
+    m_moveSequence[0] = {MOVE_CODE_HAS_MOVE,false,{0,115,65,0}};
+    m_moveSequence[1] = {MOVE_CODE_HAS_MOVE,false,{20,147,13,0}};
+    m_moveSequence[2] = {MOVE_CODE_HAS_MOVE,false,{20,147,13,100}};
+    m_moveSequence[3] = {MOVE_CODE_HAS_MOVE,false,{0,115,65,100}};
+    m_moveSequence[4] = {MOVE_CODE_HAS_MOVE,false,{29,118,33,100}};
+    m_moveSequence[5] = {MOVE_CODE_HAS_MOVE,false,{29,118,33,0}};
+    m_moveSequence[6] = {MOVE_CODE_HAS_MOVE,false,{0,115,65,0}};
+    m_moveSequence[7] = {MOVE_CODE_HAS_MOVE,false,{0,180,0,0}};
+    m_numberMove = 8;
     m_currentMoveID = 0;
 }
 
@@ -86,7 +86,7 @@ void RobotControler::moveToTargetPostion() {
     }
     bool allMotorsAreHome = true;
     for(unsigned int axis=0; axis< (unsigned int)MOTOR::MOTOR_MAX; axis++) {
-        if(!moveDone((MOTOR)axis)){
+        if(!m_motorList[axis].isMoveDone()){
             allMotorsAreHome = false;
             m_app->controlMotor((MOTOR)axis,m_motorList[axis].dirStep());
         }
@@ -115,4 +115,7 @@ void RobotControler::release() {
 }
 bool RobotControler::releaseDone() {
 
+}
+int RobotControler::motorPosition(MOTOR motorID) {
+    return m_motorList[motorID].currentStep();
 }

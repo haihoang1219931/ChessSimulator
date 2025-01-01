@@ -47,6 +47,7 @@ public:
     bool captureDone();
     void release();
     bool releaseDone();
+    int motorPosition(MOTOR motorID);
 private:
     ApplicationController* m_app;
     ROBOT_STATE m_robotState;

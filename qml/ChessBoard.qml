@@ -47,14 +47,14 @@ Item {
         var KNIGHT = 5;
         var PAWN = 6;
         var chessPieceModel = [
-            {color:1,piece:ROOK},{color:1,piece:KNIGHT},{color:1,piece:BISHOP},{color:1,piece:QUEEN},{color:1,piece:KING},{color:1,piece:BISHOP},{color:1,piece:KNIGHT},{color:1,piece:ROOK},
-            {color:1,piece:PAWN},{color:1,piece:PAWN},{color:1,piece:PAWN},{color:1,piece:PAWN},{color:1,piece:PAWN},{color:1,piece:PAWN},{color:1,piece:PAWN},{color:1,piece:PAWN},
-            {color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},
-            {color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},
-            {color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},
-            {color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},
-            {color:0,piece:PAWN},{color:0,piece:PAWN},{color:0,piece:PAWN},{color:0,piece:PAWN},{color:0,piece:PAWN},{color:0,piece:PAWN},{color:0,piece:PAWN},{color:0,piece:PAWN},
-            {color:0,piece:ROOK},{color:0,piece:KNIGHT},{color:0,piece:BISHOP},{color:0,piece:QUEEN},{color:0,piece:KING},{color:0,piece:BISHOP},{color:0,piece:KNIGHT},{color:0,piece:ROOK},
+            {color:1,piece:ROOK},   {color:1,piece:PAWN},{color:1,piece:NOPIECE},{color:1,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:PAWN},{color:0,piece:ROOK},
+            {color:1,piece:KNIGHT}, {color:1,piece:PAWN},{color:1,piece:NOPIECE},{color:1,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:PAWN},{color:0,piece:KNIGHT},
+            {color:1,piece:BISHOP}, {color:1,piece:PAWN},{color:1,piece:NOPIECE},{color:1,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:PAWN},{color:0,piece:BISHOP},
+            {color:1,piece:QUEEN},{color:1,piece:PAWN},{color:1,piece:NOPIECE},{color:1,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:PAWN},{color:0,piece:QUEEN},
+            {color:1,piece:KING},{color:1,piece:PAWN},{color:1,piece:NOPIECE},{color:1,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:PAWN},{color:0,piece:KING},
+            {color:1,piece:BISHOP}, {color:1,piece:PAWN},{color:1,piece:NOPIECE},{color:1,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:PAWN},{color:0,piece:BISHOP},
+            {color:1,piece:KNIGHT}, {color:1,piece:PAWN},{color:1,piece:NOPIECE},{color:1,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:PAWN},{color:0,piece:KNIGHT},
+            {color:1,piece:ROOK},   {color:1,piece:PAWN},{color:1,piece:NOPIECE},{color:1,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:NOPIECE},{color:0,piece:PAWN},{color:0,piece:ROOK},
         ];
         repeaterChessPiece.model = chessPieceModel;
     }

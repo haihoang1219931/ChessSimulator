@@ -26,12 +26,13 @@ public:
     void loop();
     MACHINE_STATE stateMachine();
     void setMachineState(MACHINE_STATE machineState);
+    int motorPosition(MOTOR motorID);
     virtual int printf(const char *fmt, ...) = 0;
     virtual void msleep(int millis) = 0;
     virtual long getSystemTimeInMillis() = 0;
     virtual void checkInput() = 0;
     virtual void controlMotor(MOTOR motorID, int dir) = 0;
-
+    virtual bool isAxisHome(MOTOR motorID) = 0;
 protected:
     MACHINE_STATE m_machineState;
     RobotControler* m_robot;

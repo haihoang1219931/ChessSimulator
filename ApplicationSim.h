@@ -16,6 +16,7 @@ public:
     long getSystemTimeInMillis() override;
     void checkInput() override;
     void controlMotor(MOTOR motorID, int dir) override;
+    bool isAxisHome(MOTOR motorID) override;
 private:
     MainProcess* m_mainProcess;
 };
