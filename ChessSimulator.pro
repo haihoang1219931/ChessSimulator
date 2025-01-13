@@ -24,6 +24,18 @@ HEADERS += \
     MainProcess.h \
     RobotControler.h \
     Motor.h \
-    ChessController.h
+    ChessController.h \
+    ProjectTypes.h
 
-DISTFILES +=
+INCLUDEPATH += /usr/local/include/opencv4
+DEPENDPATH += /usr/local/include/opencv4
+unix:!macx: LIBS += -L/usr/local/lib/  \
+    -lopencv_objdetect \
+    -lopencv_shape -lopencv_stitching -lopencv_superres -lopencv_features2d -lopencv_calib3d \
+    -lopencv_videostab \
+    -lopencv_video \
+    -lopencv_core \
+    -lopencv_highgui \
+    -lopencv_imgcodecs \
+    -lopencv_imgproc \
+    -lopencv_videoio

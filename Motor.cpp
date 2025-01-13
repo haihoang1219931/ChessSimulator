@@ -7,6 +7,9 @@ Motor::Motor():
 {
 
 }
+float Motor::armLength() {
+    return m_armLength;
+}
 int Motor::targetStep() {
     return m_targetStep;
 }
@@ -18,6 +21,15 @@ int Motor::dirStep() {
 }
 bool Motor::isMoveDone() {
     return m_currentStep == m_targetStep;
+}
+void Motor::setTargetAngle(float targetAngle) {
+    m_targetStep = (int)(targetAngle/m_stepAngle);
+}
+void Motor::setArmLength(float armLength) {
+    m_armLength = armLength;
+}
+void Motor::setStepAngle(float stepAngle) {
+    m_stepAngle = stepAngle;
 }
 void Motor::setTargetStep(int targetStep) {
     m_targetStep = targetStep;

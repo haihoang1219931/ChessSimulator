@@ -1,19 +1,10 @@
 #ifndef APPLICATIONCONTROLLER_H
 #define APPLICATIONCONTROLLER_H
 
-#include "RobotControler.h"
-#include "ChessController.h"
+#include "ProjectTypes.h"
 
-typedef enum{
-    MACHINE_INITIALIZE_ROBOT,
-    MACHINE_CHECK_PIECE,
-    MACHINE_WAIT_OPPONENT_MOVE,
-    MACHINE_CALCULATE_NEXT_MOVE,
-    MACHINE_ATTACK_OPPONENT_PIECE,
-    MACHINE_MOVE_PIECE,
-    MACHINE_MOVE_PIECE_EXECUTE,
-    MACHINE_RETURN_HOME,
-} MACHINE_STATE;
+class RobotControler;
+class ChessController;
 class ApplicationController
 {
 public:

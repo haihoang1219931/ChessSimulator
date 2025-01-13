@@ -1,5 +1,5 @@
 #include "ApplicationSim.h"
-
+#include "RobotControler.h"
 #ifdef __linux__
 #include <sys/time.h>
 #include <unistd.h>
@@ -12,13 +12,13 @@ ApplicationSim::ApplicationSim(MainProcess* mainProcess)
 {
     m_mainProcess = mainProcess;
     m_machineState = MACHINE_STATE::MACHINE_INITIALIZE_ROBOT;
-    m_robot->getMotor(MOTOR::MOTOR_X)->setCurrentStep(0);
-    m_robot->getMotor(MOTOR::MOTOR_Y)->setCurrentStep(180);
-    m_robot->getMotor(MOTOR::MOTOR_Z)->setCurrentStep(0);
+    m_robot->getMotor(MOTOR::MOTOR_ARM1)->setCurrentStep(0);
+    m_robot->getMotor(MOTOR::MOTOR_ARM2)->setCurrentStep(180);
+    m_robot->getMotor(MOTOR::MOTOR_ARM3)->setCurrentStep(0);
     m_robot->getMotor(MOTOR::MOTOR_CAP)->setCurrentStep(100);
-    m_robot->getMotor(MOTOR::MOTOR_X)->setTargetStep(0);
-    m_robot->getMotor(MOTOR::MOTOR_Y)->setTargetStep(180);
-    m_robot->getMotor(MOTOR::MOTOR_Z)->setTargetStep(0);
+    m_robot->getMotor(MOTOR::MOTOR_ARM1)->setTargetStep(0);
+    m_robot->getMotor(MOTOR::MOTOR_ARM2)->setTargetStep(180);
+    m_robot->getMotor(MOTOR::MOTOR_ARM3)->setTargetStep(0);
     m_robot->getMotor(MOTOR::MOTOR_CAP)->setTargetStep(100);
 
     ::printf("ApplicationSim constructor\r\n");

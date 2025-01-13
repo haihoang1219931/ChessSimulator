@@ -40,9 +40,9 @@ void MainProcess::run() {
         m_application->loop();
         Q_EMIT readyToUpdate();
         Q_EMIT robotChanged(
-                    m_application->motorPosition(MOTOR::MOTOR_X),
-                    m_application->motorPosition(MOTOR::MOTOR_Y),
-                    m_application->motorPosition(MOTOR::MOTOR_Z),
+                    m_application->motorPosition(MOTOR::MOTOR_ARM1),
+                    m_application->motorPosition(MOTOR::MOTOR_ARM2),
+                    m_application->motorPosition(MOTOR::MOTOR_ARM3),
                     m_application->motorPosition(MOTOR::MOTOR_CAP));
         m_application->msleep(30);
     }

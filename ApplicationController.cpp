@@ -1,5 +1,6 @@
 #include "ApplicationController.h"
 #include "RobotControler.h"
+#include "ChessController.h"
 ApplicationController::ApplicationController()
 {
     m_frameWidth = 128;
@@ -33,7 +34,7 @@ void ApplicationController::loop() {
         break;
     }
     case MACHINE_MOVE_PIECE:{
-        m_robot->moveHost(0,0,0,0);
+        m_robot->moveHost(m_chess->nextMove());
         setMachineState(MACHINE_MOVE_PIECE_EXECUTE);
         break;
     }
