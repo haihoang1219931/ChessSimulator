@@ -13,6 +13,7 @@ public:
     void calculateNextMove();
     void setChessPiece(bool isBlack);
     void setOpponentMove(ChessMove chessMove);
+    void setNextMove(ChessMove chessMove);
     ChessMove nextMove();
 private:
     ApplicationController* m_app;
@@ -21,6 +22,7 @@ private:
     bool m_isBlack;
     bool m_isOpponentMoved;
     bool m_isNextMoveCalculated;
+    ChessMove m_opponentMove;
     ChessMove m_nextMove;
 };
 

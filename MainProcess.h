@@ -25,6 +25,9 @@ public Q_SLOTS:
     void setRender(VideoRender* render);
     void updateScreen();
     void pause(bool pause);
+    void setBlackSide(bool isBlack);
+    void setOpponentMove(int startRow, int startCol, int stopRow, int stopCol, char promotePiece);
+    void setNextMove(int startRow, int startCol, int stopRow, int stopCol, char promotePiece);
 private:
     unsigned char m_renderData[93110400]; // 1920x1080 I420
     bool m_stopped;

@@ -32,7 +32,6 @@ typedef enum {
     ROBOT_MOVE_PIECE
 } ROBOT_STATE;
 
-#pragma pack(1)
 typedef struct {
     bool moveInit;
     float armAngle[MOTOR_MAX];

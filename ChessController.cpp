@@ -12,6 +12,11 @@ void ChessController::setChessPiece(bool isBlack) {
 }
 void ChessController::setOpponentMove(ChessMove chessMove) {
     m_isOpponentMoved = true;
+    m_opponentMove = chessMove;
+}
+void ChessController::setNextMove(ChessMove chessMove) {
+    m_isNextMoveCalculated = true;
+    m_nextMove = chessMove;
 }
 ChessMove ChessController::nextMove() {
     return m_nextMove;
@@ -62,11 +67,12 @@ void ChessController::waitOpponentMove() {
 void ChessController::calculateNextMove() {
     if(m_isNextMoveCalculated) {
         m_isNextMoveCalculated = false;
-        ChessMove nextMove;
+//        ChessMove nextMove;
         // Todo: caculate next move
-        m_nextMove = nextMove;
+//        m_nextMove = nextMove;
         m_app->setMachineState(MACHINE_STATE::MACHINE_MOVE_PIECE);
     } else {
         m_app->msleep(1000);
+        m_app->printf("NM.");
     }
 }

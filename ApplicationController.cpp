@@ -52,6 +52,9 @@ void ApplicationController::loop() {
 MACHINE_STATE ApplicationController::stateMachine() {
     return m_machineState;
 }
+ChessController* ApplicationController::chessController() {
+    return m_chess;
+}
 int ApplicationController::motorPosition(MOTOR motorID) {
     return m_robot->motorPosition(motorID);
 }

@@ -1,5 +1,5 @@
 #include "MainProcess.h"
-
+#include "ChessController.h"
 MainProcess::MainProcess(QThread *parent) :
     QThread(parent),
     m_stopped(false),
@@ -29,7 +29,19 @@ void MainProcess::pause(bool pause){
         m_pauseCond->wakeAll();
     }
 }
+void MainProcess::setBlackSide(bool isBlack) {
+    m_application->chessController()->setChessPiece(isBlack);
+}
 
+void MainProcess::setOpponentMove(int startRow, int startCol, int stopRow, int stopCol, char promotePiece) {
+    ChessMove chessMove = {startRow,startCol,stopRow,stopCol,false,false,promotePiece};
+    m_application->chessController()->setOpponentMove(chessMove);
+}
+
+void MainProcess::setNextMove(int startRow, int startCol, int stopRow, int stopCol, char promotePiece) {
+    ChessMove chessMove = {startRow,startCol,stopRow,stopCol,false,false,promotePiece};
+    m_application->chessController()->setNextMove(chessMove);
+}
 void MainProcess::run() {
     m_application->printf("Start\r\n");
     while(!m_stopped) {

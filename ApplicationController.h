@@ -16,6 +16,7 @@ public:
     unsigned char* getScreenData();
     void loop();
     MACHINE_STATE stateMachine();
+    ChessController* chessController();
     void setMachineState(MACHINE_STATE machineState);
     int motorPosition(MOTOR motorID);
     virtual int printf(const char *fmt, ...) = 0;

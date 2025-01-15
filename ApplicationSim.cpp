@@ -5,6 +5,7 @@
 #include <unistd.h>
 #elif _WIN32
 #include <time.h>
+#include <unistd.h>
 #else
 #endif
 
@@ -40,7 +41,10 @@ void ApplicationSim::msleep(int millis) {
     nanosleep(&ts, NULL);
 #elif _WIN32
     // windows code goes here
-    std::this_thread::sleep_for(std::chrono::milliseconds(millis));
+    struct timespec ts;
+    ts.tv_sec = millis/1000000;
+    ts.tv_nsec = millis*1000000;
+    nanosleep(&ts, NULL);
 #else
 #endif
 }

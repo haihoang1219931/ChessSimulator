@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
+    QCoreApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
     qmlRegisterType<VideoRender>("diy", 1, 0, "VideoRender");
     qmlRegisterType<MainProcess>("diy", 1, 0, "MainProcess");
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));

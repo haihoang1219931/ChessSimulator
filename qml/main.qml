@@ -61,257 +61,322 @@ ApplicationWindow {
 
     Rectangle {
         id: rectangle
-        x: 0
-        y: 0
-        width: 960
-        height: 780
+        anchors.fill: parent
         color: "#84af40"
-        z: 0
 
-        Item {
-            id: canvas
+        VideoRender {
+            id: videoRender
             anchors.fill: parent
-            VideoRender {
-                id: videoRender
-                anchors.fill: parent
-            }
         }
 
-        Label {
-            id: lblMachineState
-            x: 8
-            y: 8
-            width: 682
-            height: 57
-            color: "#ffffff"
-            text: qsTr("MACHINE_STATE")
-            anchors.horizontalCenter: parent.horizontalCenter
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 20
-        }
-
-        Column {
-            id: column
-            x: 546
-            y: 71
-            width: 394
-            height: 400
-
-            CheckBox {
-                id: cbxAutomation
-                text: qsTr("Automation")
-                onCheckedChanged: {
-                    mainProcess.pause(checked)
-                }
-            }
-
-            Row {
-                width: 240
-                height: 40
-
-                Label {
-                    id: lblAngle1
-                    width: 80
-                    height: 40
-                    text: qsTr("Angle1")
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                }
-
-                Slider {
-                    id: sldAngle1
-                    width: 150
-                    stepSize: 1
-                    to: 360
-                    value: 0
-                    onValueChanged: {
-                        robot01.angle2 = -value
-                    }
-                }
-
-                TextField {
-                    id: txtText1
-                    width: 100
-                    text: qsTr(sldAngle1.value.toString())
-                }
-
-            }
-
-            Row {
-                width: 240
-                height: 40
-
-                Label {
-                    id: lblAngle2
-                    width: 80
-                    height: 40
-                    text: qsTr("Angle2")
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                }
-
-                Slider {
-                    id: sldAngle2
-                    width: 150
-                    stepSize: 1
-                    to: 360
-                    value: 0
-                    onValueChanged: {
-                        robot01.angle3 = -value
-                    }
-                }
-
-                TextField {
-                    id: txtText2
-                    width: 100
-                    text: qsTr(sldAngle2.value.toString())
-                }
-
-            }
-
-            Row {
-                width: 240
-                height: 40
-
-                Label {
-                    id: lblAngle3
-                    width: 80
-                    height: 40
-                    text: qsTr("Angle3")
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                }
-
-                Slider {
-                    id: sldAngle3
-                    width: 150
-                    stepSize: 1
-                    to: 360
-                    value: 0
-                    onValueChanged: {
-                        robot01.angle4 = -value
-                    }
-                }
-
-                TextField {
-                    id: txtText3
-                    width: 100
-                    text: qsTr(sldAngle3.value.toString())
-                }
-
-            }
-
-            Row {
-                width: 240
-                height: 40
-
-                Label {
-                    id: lblAngle4
-                    width: 80
-                    height: 40
-                    text: qsTr("Angle4")
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                }
-
-                Slider {
-                    id: sldAngle4
-                    width: 150
-                    stepSize: 1
-                    to: 100
-                    value: 0
-                    onValueChanged: {
-                        robot01.grabberAngle = value/to
-                    }
-                }
-
-                TextField {
-                    id: txtText4
-                    width: 100
-                    text: qsTr(sldAngle4.value.toString())
-                }
-
-            }
-
-        }
-    }
-    Column {
-        anchors.left: parent.left
-        anchors.leftMargin: 80
-        spacing: 80
-        Item {
-            width: 350
-            height: 320
-            Grid {
-                id: grid
-                y: parent.height
-                width: 320
-                height: 40
-                columns: 8
-                rows: 1
-                Repeater {
-                    id: repeater
-                    model: [0,1,0,1,0,1,0,1]
-                    delegate: Rectangle {
-                        width: grid.width / grid.columns
-                        height: grid.height / grid.rows
-                        color: modelData === 0? "#90652C" : "#DEB887"
-                    }
-                }
-            }
-            Robot {
-                id: robot01
-                x: parent.width
-                y: parent.height
-                width: 320
-                angle1: -90
-                angle2: 10
-                angle3: -160
-                angle4: -30
-                arm1Width: 100
-                arm2Width: 250
-                arm3Width: 200
-                arm4Width: 50
-            }
-        }
-        Item {
-            width: 350
-            height: 320
+        Row {
+            anchors.left: parent.left
+            anchors.leftMargin: 80
+            anchors.top: parent.top
+            anchors.topMargin: 20
+            spacing: 20
             ChessBoard {
-                width: 320
-                height: 320
+                width: 640
+                height: 640
             }
-            Robot {
-                id: robot02
-                x: parent.width
-                y: parent.height/2-20
-                width: 320
-                angle1: 180
-                angle2: 0
-                angle3: 0
-                arm1Width: 40
-                arm2Width: 100
-                arm3Width: 100
+            Column {
+                id: column
+                width: 394
+                height: 400
+                spacing: 5
+                CheckBox {
+                    id: cbxAutomation
+                    text: qsTr("Automation")
+                    onCheckedChanged: {
+                        mainProcess.pause(checked)
+                    }
+                }
+                Row {
+                    width: 240
+                    height: 40
+                    Label {
+                        id: lblMachineState
+                        width: 120
+                        height: 40
+                        text: qsTr("MACHINE_STATE")
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
+                Row {
+                    width: 240
+                    height: 40
+                    Label {
+                        width: 120
+                        height: 40
+                        text: qsTr("Side select")
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    CheckBox {
+                        text: "White"
+                        onCheckedChanged: {
+                            mainProcess.setBlackSide(!checked);
+                        }
+                    }
+                    CheckBox {
+                        text: "Black"
+                        onCheckedChanged: {
+                            mainProcess.setBlackSide(checked);
+                        }
+                    }
+                }
+                Row {
+                    width: 240
+                    height: 40
+                    Label {
+                        width: 120
+                        height: 40
+                        text: qsTr("Opponent Move")
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    TextEdit {
+                        width: 120
+                        height: 40
+                        text: "e1,e4,R"
+                        enabled: false
+                    }
+                    Button {
+                        text: "Submit"
+                        onClicked: {
+                            mainProcess.setOpponentMove(6,3,4,3,"");
+                        }
+                    }
+                }
+                Row {
+                    width: 240
+                    height: 40
+                    Label {
+                        width: 120
+                        height: 40
+                        text: qsTr("Next Move")
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    TextEdit {
+                        width: 120
+                        height: 40
+                        text: "e1,e4,Q"
+                        enabled: false
+                    }
+                    Button {
+                        text: "Submit"
+                        onClicked: {
+                            mainProcess.setNextMove(6,3,4,3,"");
+                        }
+                    }
+                }
+    //            Row {
+    //                width: 240
+    //                height: 40
+
+    //                Label {
+    //                    id: lblAngle1
+    //                    width: 80
+    //                    height: 40
+    //                    text: qsTr("Angle1")
+    //                    horizontalAlignment: Text.AlignLeft
+    //                    verticalAlignment: Text.AlignVCenter
+    //                }
+
+    //                Slider {
+    //                    id: sldAngle1
+    //                    width: 150
+    //                    stepSize: 1
+    //                    to: 360
+    //                    value: 0
+    //                    onValueChanged: {
+    //                        robot01.angle2 = -value
+    //                    }
+    //                }
+
+    //                TextField {
+    //                    id: txtText1
+    //                    width: 100
+    //                    text: qsTr(sldAngle1.value.toString())
+    //                }
+
+    //            }
+
+    //            Row {
+    //                width: 240
+    //                height: 40
+
+    //                Label {
+    //                    id: lblAngle2
+    //                    width: 80
+    //                    height: 40
+    //                    text: qsTr("Angle2")
+    //                    horizontalAlignment: Text.AlignLeft
+    //                    verticalAlignment: Text.AlignVCenter
+    //                }
+
+    //                Slider {
+    //                    id: sldAngle2
+    //                    width: 150
+    //                    stepSize: 1
+    //                    to: 360
+    //                    value: 0
+    //                    onValueChanged: {
+    //                        robot01.angle3 = -value
+    //                    }
+    //                }
+
+    //                TextField {
+    //                    id: txtText2
+    //                    width: 100
+    //                    text: qsTr(sldAngle2.value.toString())
+    //                }
+
+    //            }
+
+    //            Row {
+    //                width: 240
+    //                height: 40
+
+    //                Label {
+    //                    id: lblAngle3
+    //                    width: 80
+    //                    height: 40
+    //                    text: qsTr("Angle3")
+    //                    horizontalAlignment: Text.AlignLeft
+    //                    verticalAlignment: Text.AlignVCenter
+    //                }
+
+    //                Slider {
+    //                    id: sldAngle3
+    //                    width: 150
+    //                    stepSize: 1
+    //                    to: 360
+    //                    value: 0
+    //                    onValueChanged: {
+    //                        robot01.angle4 = -value
+    //                    }
+    //                }
+
+    //                TextField {
+    //                    id: txtText3
+    //                    width: 100
+    //                    text: qsTr(sldAngle3.value.toString())
+    //                }
+
+    //            }
+
+    //            Row {
+    //                width: 240
+    //                height: 40
+
+    //                Label {
+    //                    id: lblAngle4
+    //                    width: 80
+    //                    height: 40
+    //                    text: qsTr("Angle4")
+    //                    horizontalAlignment: Text.AlignLeft
+    //                    verticalAlignment: Text.AlignVCenter
+    //                }
+
+    //                Slider {
+    //                    id: sldAngle4
+    //                    width: 150
+    //                    stepSize: 1
+    //                    to: 100
+    //                    value: 0
+    //                    onValueChanged: {
+    //                        robot01.grabberAngle = value/to
+    //                    }
+    //                }
+
+    //                TextField {
+    //                    id: txtText4
+    //                    width: 100
+    //                    text: qsTr(sldAngle4.value.toString())
+    //                }
+    //            }
             }
         }
     }
+//    Column {
+//        anchors.left: parent.left
+//        anchors.leftMargin: 80
+//        spacing: 80
+//        Item {
+//            width: 350
+//            height: 320
+//            Grid {
+//                id: grid
+//                y: parent.height
+//                width: 320
+//                height: 40
+//                columns: 8
+//                rows: 1
+//                Repeater {
+//                    id: repeater
+//                    model: [0,1,0,1,0,1,0,1]
+//                    delegate: Rectangle {
+//                        width: grid.width / grid.columns
+//                        height: grid.height / grid.rows
+//                        color: modelData === 0? "#90652C" : "#DEB887"
+//                    }
+//                }
+//            }
+//            Robot {
+//                id: robot01
+//                x: parent.width
+//                y: parent.height
+//                width: 320
+//                angle1: -90
+//                angle2: 10
+//                angle3: -160
+//                angle4: -30
+//                arm1Width: 100
+//                arm2Width: 250
+//                arm3Width: 200
+//                arm4Width: 50
+//            }
+//        }
+//        Item {
+//            width: 350
+//            height: 320
+//            ChessBoard {
+//                width: 320
+//                height: 320
+//            }
+//            Robot {
+//                id: robot02
+//                x: parent.width
+//                y: parent.height/2-20
+//                width: 320
+//                angle1: 180
+//                angle2: 0
+//                angle3: 0
+//                arm1Width: 40
+//                arm2Width: 100
+//                arm3Width: 100
+//            }
+//        }
+//    }
 
     MainProcess {
         id: mainProcess
         onReadyToUpdate: {
             mainProcess.updateScreen();
         }
-        onRobotChanged: {
-            robot01.angle2 = -angle1;
-            robot01.angle3 = -angle2;
-            robot01.angle4 = -angle3;
-            robot01.grabberAngle = angle4/100
-
-        }
+//        onRobotChanged: {
+//            robot01.angle2 = -angle1;
+//            robot01.angle3 = -angle2;
+//            robot01.angle4 = -angle3;
+//            robot01.grabberAngle = angle4/100
+//        }
     }
 
     Component.onCompleted: {
+        console.log("GUI started")
         mainProcess.setRender(videoRender);
         mainProcess.startService();
     }

@@ -5,7 +5,7 @@ QT += qml quick qml
 CONFIG += c++11
 
 RESOURCES += qml.qrc
-
+QML_DESIGNER_IMPORT_PATH =
 SOURCES += main.cpp  \
     ApplicationController.cpp \
     VideoDisplay/I420Render.cpp \
@@ -27,8 +27,8 @@ HEADERS += \
     ChessController.h \
     ProjectTypes.h
 
-INCLUDEPATH += /usr/local/include/opencv4
-DEPENDPATH += /usr/local/include/opencv4
+unix:!macx: INCLUDEPATH += /usr/local/include/opencv4
+unix:!macx: DEPENDPATH += /usr/local/include/opencv4
 unix:!macx: LIBS += -L/usr/local/lib/  \
     -lopencv_objdetect \
     -lopencv_shape -lopencv_stitching -lopencv_superres -lopencv_features2d -lopencv_calib3d \
@@ -39,3 +39,5 @@ unix:!macx: LIBS += -L/usr/local/lib/  \
     -lopencv_imgcodecs \
     -lopencv_imgproc \
     -lopencv_videoio
+
+win32: LIBS += -lpthread
