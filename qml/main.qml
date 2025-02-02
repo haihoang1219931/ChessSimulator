@@ -76,6 +76,7 @@ ApplicationWindow {
             anchors.topMargin: 20
             spacing: 20
             ChessBoard {
+                id: chessBoard
                 width: 640
                 height: 640
             }
@@ -101,6 +102,27 @@ ApplicationWindow {
                         text: qsTr("MACHINE_STATE")
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
+                    }
+                }
+                Row {
+                    width: 240
+                    height: 40
+                    spacing: 20
+                    Label {
+                        width: 120
+                        height: 40
+                        text: qsTr("Rotate")
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    ComboBox {
+                        width: 120
+                        height: 40
+                        model: ["0","90","180","270"]
+                        currentIndex: 0
+                        onCurrentIndexChanged: {
+                            chessBoard.chessRotation = parseInt(currentText, 10);
+                        }
                     }
                 }
                 Row {

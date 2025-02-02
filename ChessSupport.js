@@ -21,27 +21,60 @@ function createChessBoardModel() {
     var chessBoardModel = [];
     for(var row =0; row <8; row ++) {
         for(var col =0; col <8; col ++){
-            chessBoardModel[row*8+col] = {row:row,col:col,suggest:false}
+            chessBoardModel[row*8+col] = {row:row,col:col,suggest:false,clicked:false}
         }
     }
     return chessBoardModel;
 }
 function createChessPiecesModel(){
     var chessPieceModel = [
-        {piece:W_ROOK},   {piece:W_PAWN},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:B_PAWN},{piece:B_ROOK},
-        {piece:W_KNIGHT}, {piece:W_PAWN},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:B_PAWN},{piece:B_KNIGHT},
-        {piece:W_BISHOP}, {piece:W_PAWN},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:B_PAWN},{piece:B_BISHOP},
-        {piece:W_QUEEN},  {piece:W_PAWN},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:B_PAWN},{piece:B_QUEEN},
-        {piece:W_KING},   {piece:W_PAWN},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:B_PAWN},{piece:B_KING},
-        {piece:W_BISHOP}, {piece:W_PAWN},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:B_PAWN},{piece:B_BISHOP},
-        {piece:W_KNIGHT}, {piece:W_PAWN},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:B_PAWN},{piece:B_KNIGHT},
-        {piece:W_ROOK},   {piece:W_PAWN},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:NOPIECE},{piece:B_PAWN},{piece:B_ROOK},
+        W_ROOK,  W_KNIGHT, W_BISHOP, W_QUEEN ,W_KING , W_BISHOP, W_KNIGHT, W_ROOK,
+        W_PAWN,  W_PAWN,   W_PAWN,   W_PAWN,  W_PAWN,  W_PAWN,   W_PAWN,   W_PAWN,
+        NOPIECE, NOPIECE,  NOPIECE,  NOPIECE, NOPIECE, NOPIECE,  NOPIECE,  NOPIECE,
+        NOPIECE, NOPIECE,  NOPIECE,  NOPIECE, NOPIECE, NOPIECE,  NOPIECE,  NOPIECE,
+        NOPIECE, NOPIECE,  NOPIECE,  NOPIECE, NOPIECE, NOPIECE,  NOPIECE,  NOPIECE,
+        NOPIECE, NOPIECE,  NOPIECE,  NOPIECE, NOPIECE, NOPIECE,  NOPIECE,  NOPIECE,
+        B_PAWN,  B_PAWN,   B_PAWN,   B_PAWN,  B_PAWN,  B_PAWN,   B_PAWN,   B_PAWN,
+        B_ROOK,  B_KNIGHT, B_BISHOP, B_QUEEN ,B_KING , B_BISHOP, B_KNIGHT, B_ROOK,
     ];
-    chessPieceModel[2*8+2] = {piece:B_ROOK}
-    chessPieceModel[3*8+2] = {piece:B_ROOK}
-    chessPieceModel[4*8+3] = {piece:B_ROOK}
-    chessPieceModel[5*8+3] = {piece:W_ROOK}
+    chessPieceModel[2*8+2] = B_ROOK
+    chessPieceModel[2*8+3] = B_ROOK
+    chessPieceModel[3*8+4] = B_ROOK
+    chessPieceModel[3*8+5] = W_ROOK
     return chessPieceModel;
+}
+
+function updateSugguestMoves() {
+    var possibleMoves = ChessSupport.validMove(repeaterChessPiece.model,rowClicked,colClicked);
+    var arrayLength = possibleMoves.length;
+    for(var i = 0; i < arrayLength; i++) {
+        chessBoardModel[possibleMoves[i].row*8+possibleMoves[i].col] = possibleMoves[i];
+    }
+}
+
+function showSugguestMoves() {
+    var possibleMoves = ChessSupport.validMove(repeaterChessPiece.model,rowClicked,colClicked);
+    var arrayLength = possibleMoves.length;
+    for(var i = 0; i < arrayLength; i++) {
+        chessBoardModel[possibleMoves[i].row*8+possibleMoves[i].col] = possibleMoves[i];
+    }
+}
+
+function updateChessPieceModel(chessPieceModel,chessBoardModel, targetRow, targetCol) {
+    var chessPiece = NOPIECE;
+    for(var row =0; row <8; row ++) {
+        for(var col =0; col <8; col ++){
+            if(chessBoardModel[row*8+col].clicked) {
+                chessPiece = chessPieceModel[row*8+col];
+                chessPieceModel[row*8+col] = NOPIECE;
+            } else if(chessBoardModel[row*8+col].suggest) {
+                chessBoardModel[row*8+col].suggest = false;
+            }
+        }
+    }
+    console.log("updateChessPieceModel "+ targetRow +":"+targetCol + " = " + chessPiece);
+    chessPieceModel[targetRow*8+targetCol] = chessPiece;
+    return {board:chessBoardModel,piece:chessPieceModel};
 }
 function chessSide(chessPiece) {
     if(chessPiece >= W_KING && chessPiece <= W_PAWN) {
@@ -72,21 +105,30 @@ function validMove(chessPieceModel,_row,_col) {
     var possibleMoves=[];
     var chessPiece = chessPieceModel[_row*8+_col]
 //    console.log("chessPiece "+)
-    switch(chessPiece.piece) {
+    switch(chessPiece) {
     case W_PAWN: {
-        if(chessSide(chessPieceModel[_row*8+_col+1].piece)=== NOPIECE)
-            possibleMoves.push({row:_row,col:_col+1,suggest:true});
-        if(chessSide(chessPieceModel[_row*8+_col+2].piece)=== NOPIECE && _col === 1)
-            possibleMoves.push({row:_row,col:_col+2,suggest:true});
-        if(_row-1 >= 0 && chessSide(chessPieceModel[(_row-1)*8+_col+1].piece)=== BLACK)
-            possibleMoves.push({row:_row-1,col:_col+1,suggest:true});
-        if(_row+1 < 8 && chessSide(chessPieceModel[(_row+1)*8+_col+1].piece)=== BLACK)
-            possibleMoves.push({row:_row+1,col:_col+1,suggest:true});
+        if(chessSide(chessPieceModel[(_row+1)*8+_col])=== NOPIECE)
+            possibleMoves.push({row:_row+1,col:_col,suggest:true,clicked:false});
+        if(chessSide(chessPieceModel[(_row+2)*8+_col])=== NOPIECE && _row === 1)
+            possibleMoves.push({row:_row+2,col:_col,suggest:true,clicked:false});
+        if(_col-1 >= 0 && chessSide(chessPieceModel[(_row+1)*8+_col-1])=== BLACK)
+            possibleMoves.push({row:_row+1,col:_col-1,suggest:true,clicked:false});
+        if(_col+1 < 8 && chessSide(chessPieceModel[(_row+1)*8+_col+1])=== BLACK)
+            possibleMoves.push({row:_row+1,col:_col+1,suggest:true,clicked:false});
         break;
     }
     case B_PAWN: {
+        if(chessSide(chessPieceModel[(_row-1)*8+_col])=== NOPIECE)
+            possibleMoves.push({row:_row-1,col:_col,suggest:true,clicked:false});
+        if(chessSide(chessPieceModel[(_row-2)*8+_col])=== NOPIECE && _row === 6)
+            possibleMoves.push({row:_row-2,col:_col,suggest:true,clicked:false});
+        if(_col-1 >= 0 && chessSide(chessPieceModel[(_row-1)*8+_col-1])=== BLACK)
+            possibleMoves.push({row:_row-1,col:_col-1,suggest:true,clicked:false});
+        if(_col+1 < 8 && chessSide(chessPieceModel[(_row-1)*8+_col+1])=== BLACK)
+            possibleMoves.push({row:_row-1,col:_col+1,suggest:true,clicked:false});
         break;
     }
     }
     return possibleMoves;
 }
+

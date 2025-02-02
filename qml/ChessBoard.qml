@@ -2,11 +2,12 @@ import QtQuick 2.0
 import "qrc:/ChessSupport.js" as ChessSupport
 Item {
     id: root
-    property var chessClicked
+    property real chessRotation: 0
     Grid {
         id: grid
         columns: 8
         rows: 8
+        rotation: chessRotation
         Repeater {
             id: repeater
             delegate: Rectangle {
@@ -26,14 +27,19 @@ Item {
                             parent.color = "transparent"
                         }
                         onClicked: {
-                            parent.color = "blue"
-                            chessClicked = repeaterChessPiece.model[index];
-                            var possibleMoves = ChessSupport.validMove(repeaterChessPiece.model,modelData.row,modelData.col);
-                            var chessModel = ChessSupport.createChessBoardModel();
-                            possibleMoves.forEach((item)=> {
-                                chessModel[item.row*8+item.col] = item;
-                            });
-                            repeater.model = chessModel;
+                            var itemClicked = repeaterChessPiece.model[index];
+                            var rowClicked = modelData.row;
+                            var colClicked = modelData.col;
+                            console.log("itemClicked:"+itemClicked+"("+rowClicked+","+colClicked+") Clicked: " +
+                                        repeater.model[rowClicked*8+colClicked].clicked + " Sugguest "+repeater.model[rowClicked*8+colClicked].suggest);
+                            if(repeater.model[rowClicked*8+colClicked].sugguest) {
+                                var chessPieceModel = ChessSupport.updateChessPiece(repeaterChessPiece.model,
+                                                                                    chessClicked)
+                            }
+
+                            var chessBoardModel;
+                            chessBoardModel = ChessSupport.updateSugguestMoves(repeater.model,rowClicked,colClicked);
+                            repeater.model = chessBoardModel;
                         }
                     }
                 }
@@ -43,10 +49,8 @@ Item {
                     color: "transparent"
                     border.color: modelData.suggest?"gray":"transparent"
                     border.width: 10
-                    width: typeof chessClicked !== 'undefined' &&
-                            ChessSupport.isOppositeSide(repeaterChessPiece.model[index].piece,chessClicked.piece)?parent.width:20
-                    height: typeof chessClicked !== 'undefined' &&
-                            ChessSupport.isOppositeSide(repeaterChessPiece.model[index].piece,chessClicked.piece)?parent.height:20
+                    width: ChessSupport.isOppositeSide(repeaterChessPiece.model[index],chessClicked)?parent.width:20
+                    height: ChessSupport.isOppositeSide(repeaterChessPiece.model[index],chessClicked)?parent.height:20
                     radius: width/2
                 }
             }
@@ -56,15 +60,15 @@ Item {
         id: gridChessPiece
         columns: 8
         rows: 8
+        rotation: chessRotation
         Repeater {
             id: repeaterChessPiece
             delegate: Item {
                 width: root.width / grid.columns
                 height: root.height / grid.rows
-
-
+                rotation: -chessRotation
                 Text {
-                    text: ChessSupport.charCode(modelData.piece)
+                    text: ChessSupport.charCode(modelData)
                     anchors.fill: parent
                     font.pointSize : root.width / grid.columns * 0.6
                     horizontalAlignment: Text.AlignHCenter
